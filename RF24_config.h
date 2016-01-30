@@ -52,6 +52,11 @@
 #elif defined (TEENSYDUINO)
 
   #include "utility/Teensy/RF24_arch_config.h"  
+
+#elif defined(AVR_GENERIC)
+
+  #include "utility/AVR/AVR_arch_config.h"
+
 //Everything else
 #else 
 

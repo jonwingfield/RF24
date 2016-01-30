@@ -1,14 +1,13 @@
 // ATTiny support code is from https://github.com/jscrane/RF24
 
-#ifndef _SPI_H
-#define _SPI_H
-
 /**
  * @file spi.h
  * \cond HIDDEN_SYMBOLS
  * Class declaration for SPI helper files
  */
- 
+#ifndef _SPI_H_INCLUDED
+#define _SPI_H_INCLUDED
+
 #include <stdio.h>
 #include <avr/pgmspace.h>
 
@@ -30,6 +29,8 @@
 #define SPI_CLOCK_MASK 0x03  // SPR1 = bit 1, SPR0 = bit 0 on SPCR
 #define SPI_2XCLOCK_MASK 0x01  // SPI2X = bit 0 on SPSR
 
+
+
 class SPIClass {
 public:
   static byte transfer(byte _data);
@@ -46,9 +47,11 @@ public:
   static void setDataMode(uint8_t);
   static void setClockDivider(uint8_t);
 };
+
 extern SPIClass SPI;
 
 /**
  * \endcond
  */
+
 #endif

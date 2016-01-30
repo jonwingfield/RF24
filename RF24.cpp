@@ -32,7 +32,7 @@ void RF24::csn(bool mode)
 	// Return, CSN toggle complete
 	return;
 	
-#elif defined(ARDUINO) && !defined (RF24_SPI_TRANSACTIONS)
+#elif (defined(ARDUINO) && !defined (RF24_SPI_TRANSACTIONS)) || defined(AVR_GENERIC)
 	// Minimum ideal SPI bus speed is 2x data rate
 	// If we assume 2Mbs data rate and 16Mhz clock, a
 	// divider of 4 is the minimum we want.
