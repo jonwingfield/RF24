@@ -38,6 +38,7 @@
 # To rebuild project do "make clean" then "make all".
 #----------------------------------------------------------------------------
 
+
 # MCU name
 MCU = atmega328p
 
@@ -55,11 +56,11 @@ FORMAT = ihex
 
 
 # Target file name (without extension).
-TARGET = RF24
+TARGET = test_rf24
 
 
 # List C source files here. (C dependencies are automatically generated.)
-SRC = $(TARGET).cpp utility/AVR/spi.cpp 
+SRC = $(TARGET).c
 
 
 # List Assembler source files here.
@@ -121,7 +122,7 @@ CFLAGS += $(CDEFS) $(CINCS)
 CFLAGS += -O$(OPT)
 CFLAGS += -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 CFLAGS += -Wall -Wstrict-prototypes
-CFLAGS += -Wa,-adhlns=$(<:.cpp=.lst)
+CFLAGS += -Wa,-adhlns=$(<:.c=.lst)
 CFLAGS += $(patsubst %,-I%,$(EXTRAINCDIRS))
 CFLAGS += $(CSTANDARD)
 
@@ -219,7 +220,7 @@ AVRDUDE_WRITE_FLASH = -U flash:w:$(TARGET).hex
 # Increase verbosity level.  Please use this when submitting bug
 # reports about avrdude. See <http://savannah.nongnu.org/projects/avrdude> 
 # to submit bug reports.
-# AVRDUDE_VERBOSE = -v -v
+AVRDUDE_VERBOSE = -vvv
 
 AVRDUDE_FLAGS = -p $(MCU) -c $(AVRDUDE_PROGRAMMER) -B 1 -P $(AVRDUDE_PORT)
 AVRDUDE_FLAGS += $(AVRDUDE_NO_VERIFY)
@@ -295,7 +296,7 @@ MSG_CLEANING = Cleaning project:
 
 
 # Define all object files.
-OBJ = $(SRC:.c=.o) $(ASRC:.S=.o) 
+OBJ = RF24.o utility/AVR/spi.o $(SRC:.c=.o) $(ASRC:.S=.o)
 
 # Define all listing files.
 LST = $(SRC:.c=.lst) $(ASRC:.S=.lst) 
@@ -456,13 +457,14 @@ extcoff: $(TARGET).elf
 
 
 # Compile: create object files from C source files.
-%.o : %.cpp
+%.o : %.c
 	@echo
 	@echo $(MSG_COMPILING) $<
 	$(CC) -c $(ALL_CFLAGS) $< -o $@ 
 
+
 # Compile: create assembler files from C source files.
-%.s : %.cpp
+%.s : %.c
 	$(CC) -S $(ALL_CFLAGS) $< -o $@
 
 
@@ -473,8 +475,9 @@ extcoff: $(TARGET).elf
 	$(CC) -c $(ALL_ASFLAGS) $< -o $@
 
 # Create preprocessed source for use in sending a bug report.
-%.i : %.cpp
+%.i : %.c
 	$(CC) -E -mmcu=$(MCU) -I. $(CFLAGS) $< -o $@ 
+
 
 # Target: clean project.
 clean: begin clean_list end

@@ -9,6 +9,7 @@
 #include "nRF24L01.h"
 #include "RF24_config.h"
 #include "RF24.h"
+#include "RF24_c.h"
 
 /****************************************************************************/
 
@@ -171,10 +172,13 @@ uint8_t RF24::write_register(uint8_t reg, const uint8_t* buf, uint8_t len)
   endTransaction();
   #else
 
+  printf("begin transaction\n");
   beginTransaction();
+  printf("SPI transfer\n");
   status = _SPI.transfer( W_REGISTER | ( REGISTER_MASK & reg ) );
   while ( len-- )
     _SPI.transfer(*buf++);
+  printf("end transaction\n");
   endTransaction();
 
   #endif

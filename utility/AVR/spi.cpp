@@ -1,3 +1,4 @@
+
 #include "AVR_arch_config.h"
 #include "spi.h"
 
@@ -51,3 +52,19 @@ void SPIClass::setClockDivider(uint8_t rate)
   SPCR = (SPCR & ~SPI_CLOCK_MASK) | (rate & SPI_CLOCK_MASK);
   SPSR = (SPSR & ~SPI_2XCLOCK_MASK) | ((rate >> 2) & SPI_2XCLOCK_MASK);
 }
+
+byte SPIClass::transfer(byte _data) {
+  SPDR = _data;
+  while (!(SPSR & _BV(SPIF)))
+    ;
+  return SPDR;
+}
+
+void SPIClass::attachInterrupt() {
+  SPCR |= _BV(SPIE);
+}
+
+void SPIClass::detachInterrupt() {
+  SPCR &= ~_BV(SPIE);
+}
+
