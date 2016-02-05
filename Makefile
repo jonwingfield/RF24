@@ -126,6 +126,25 @@ CFLAGS += -Wa,-adhlns=$(<:.c=.lst)
 CFLAGS += $(patsubst %,-I%,$(EXTRAINCDIRS))
 CFLAGS += $(CSTANDARD)
 
+#---------------- Compiler Options C++ ----------------
+#  -g*:          generate debugging information
+#  -O*:          optimization level
+#  -f...:        tuning, see GCC manual and avr-libc documentation
+#  -Wall...:     warning level
+#  -Wa,...:      tell GCC to pass this to the assembler.
+#    -adhlns...: create assembler listing
+CPPFLAGS = -g$(DEBUG)
+CPPFLAGS += $(CDEFS) 
+CPPFLAGS += -O$(OPT)
+CPPFLAGS += -funsigned-char
+CPPFLAGS += -funsigned-bitfields
+CPPFLAGS += -fpack-struct
+CPPFLAGS += -fshort-enums
+CPPFLAGS += -fno-exceptions
+CPPFLAGS += -Wall
+CFLAGS += -Wundef
+CPPFLAGS += -Wa,-adhlns=$(<:.cpp=.lst)
+#CPPFLAGS += $(patsubst %,-I%,$(EXTRAINCDIRS))
 
 #---------------- Assembler Options ----------------
 #  -Wa,...:   tell GCC to pass this to the assembler.
@@ -309,6 +328,7 @@ GENDEPFLAGS = -MD -MP -MF .dep/$(@F).d
 # Combine all necessary flags and optional flags.
 # Add target processor to flags.
 ALL_CFLAGS = -mmcu=$(MCU) -I. $(CFLAGS) $(GENDEPFLAGS)
+ALL_CPPFLAGS = -mmcu=$(MCU) -I. $(CPPFLAGS) $(GENDEPFLAGS)
 ALL_ASFLAGS = -mmcu=$(MCU) -I. -x assembler-with-cpp $(ASFLAGS)
 
 
@@ -461,6 +481,12 @@ extcoff: $(TARGET).elf
 	@echo
 	@echo $(MSG_COMPILING) $<
 	$(CC) -c $(ALL_CFLAGS) $< -o $@ 
+
+%.o : %.cpp
+	@echo "compiling C++"
+	@echo $@
+	@echo $(MSG_COMPILING) $<
+	$(CC) -c $(ALL_CPPFLAGS) $< -o $@ 
 
 
 # Compile: create assembler files from C source files.
