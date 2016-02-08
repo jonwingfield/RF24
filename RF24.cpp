@@ -47,6 +47,8 @@ void RF24::csn(bool mode)
 #elif defined (RF24_RPi)
       if(!mode)
 	    _SPI.chipSelect(csn_pin);
+#elif defined (MRAA)
+      digitalWrite(csn_pin, mode);
 #endif
 
 #if !defined (RF24_LINUX)
@@ -172,13 +174,10 @@ uint8_t RF24::write_register(uint8_t reg, const uint8_t* buf, uint8_t len)
   endTransaction();
   #else
 
-  printf("begin transaction\n");
   beginTransaction();
-  printf("SPI transfer\n");
   status = _SPI.transfer( W_REGISTER | ( REGISTER_MASK & reg ) );
   while ( len-- )
     _SPI.transfer(*buf++);
-  printf("end transaction\n");
   endTransaction();
 
   #endif
@@ -584,7 +583,7 @@ bool RF24::begin(void)
 	  gpio.begin(ce_pin,csn_pin);	
 	#endif
 	
-
+#if !defined (MRAA)
 	switch(csn_pin){     //Ensure valid hardware CS pin
 	  case 0: break;
 	  case 1: break;
@@ -593,10 +592,12 @@ bool RF24::begin(void)
 	  case 7: csn_pin = 1; break;
 	  default: csn_pin = 0; break;
 	}	
+#endif
 	
-    _SPI.begin(csn_pin);
+    _SPI.begin(0);
 
 	pinMode(ce_pin,OUTPUT);
+    pinMode(csn_pin, OUTPUT);
 	ce(LOW);    
 
 	delay(100);

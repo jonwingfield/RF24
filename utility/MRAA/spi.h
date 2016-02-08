@@ -41,7 +41,9 @@ uint8_t SPI::transfer(uint8_t _data)
 }
 
 void SPI::transfernb(char* tbuf, char* rbuf, uint32_t len){
-	mspi->transfer((uint8_t*)tbuf, (uint8_t*)rbuf, len);
+	for (uint32_t i=0; i<len; i++) {
+		rbuf[i] = mspi->writeByte(tbuf[i]);
+	}
 }
 
 void SPI::transfern(char* buf, uint32_t len)
