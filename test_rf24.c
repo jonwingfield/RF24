@@ -32,10 +32,11 @@ static FILE mystdout = FDEV_SETUP_STREAM(uart_putchar, NULL, _FDEV_SETUP_WRITE);
 const uint8_t pipes[][6] = {"1Node","2Node"};
 
 // PORTB
-RF24* radio;
+RF24 rf24;
 
 int main (void)
 {
+    RF24* radio = &rf24;
     ioinit(); //Setup IO pins and defaults
 
     for(int i=0; i<100; i++) {
@@ -43,7 +44,7 @@ int main (void)
       delay_ms(300);
     }
 
-    radio = rf24_init(6,7);
+    rf24_init_stack(&rf24, 6,7);
 
     printf("Final hello!\n");
 

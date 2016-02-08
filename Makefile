@@ -142,6 +142,7 @@ CPPFLAGS += -fpack-struct
 CPPFLAGS += -fshort-enums
 CPPFLAGS += -fno-exceptions
 CPPFLAGS += -Wall
+CPPFLAGS += -std=c++11
 CFLAGS += -Wundef
 CPPFLAGS += -Wa,-adhlns=$(<:.cpp=.lst)
 #CPPFLAGS += $(patsubst %,-I%,$(EXTRAINCDIRS))
